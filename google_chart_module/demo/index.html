@@ -31,7 +31,7 @@
 					height: 100,
 					animation:{
 				        duration: 2000,
-				        easing: 'out',
+				        easing: 'linear',
 				    },
 					hAxis: {
 						title: 'Time'
@@ -68,6 +68,10 @@
 				'options': {
 					width: 500,
 					height: 100,
+					animation:{
+				        duration: 2000,
+				        easing: 'linear',
+				    },
 					hAxis: {
 						title: 'Time'
 					},
@@ -85,7 +89,10 @@
 
 			setTimeout(function() { 
 				google_chart_module.updateChart('chart1', [
-					[0, 0],   [1, 10],  [2, 23]
+					[0, 0],   [1, 10],  [2, 23],
+					[3, 45], [4, 86], [5, 1],
+					[6, 67], [7, 57], [8, 98],
+					[9, 54], [10, 1], [11, 48]
 				]);
 			}, 3000);
 
@@ -202,9 +209,9 @@
 		            setDataTablesColumns(dataTables);
 		            setDataTablesRows(dataTables);
 
-		            initializedCharts = initCharts(dataTables);
+		            readyCharts = initCharts(dataTables);
 
-		            drawCharts(initializedCharts);
+		            drawCharts(readyCharts);
 		        },
 
 		        updateChart: function(element, data) {
@@ -222,14 +229,19 @@
 		            	return;
 		            }
 
-		            var dataTable = dataTables[index];
-		            var rows = dataTable.getNumberOfRows();
-		            var columns = dataTable.getNumberOfColumns();
+		            var rowsIndex = dataTables[index].getNumberOfRows();
 
-		            dataTable.removeRows(0, rows);
-		            dataTable.insertRows(0, data);
+		            dataTables[index].removeRows(0, rowsIndex);
+		            dataTables[index].insertRows(0, data);
 
-		            drawCharts(initializedCharts);
+		            // for (var i = 0; i < data.length; i++) {		            	
+		            // 	for (var j = 0; j < data[i].length; j++) {
+		            // 		dataTables[index].setValue(i, j, data[i][j]);
+		            // 		console.log( i + "," + j + "," + data[i][j] );
+		            // 	}
+		            // }
+
+		            drawCharts(readyCharts);
 		        },
 
 		        addChart: function( chart ) {

@@ -107,9 +107,9 @@ var google_chart_module = (function() {
             setDataTablesColumns(dataTables);
             setDataTablesRows(dataTables);
 
-            initializedCharts = initCharts(dataTables);
+            readyCharts = initCharts(dataTables);
 
-            drawCharts(initializedCharts);
+            drawCharts(readyCharts);
         },
 
         updateChart: function(element, data) {
@@ -127,14 +127,19 @@ var google_chart_module = (function() {
                 return;
             }
 
-            var dataTable = dataTables[index];
-            var rows = dataTable.getNumberOfRows();
-            var columns = dataTable.getNumberOfColumns();
+            var rowsIndex = dataTables[index].getNumberOfRows();
 
-            dataTable.removeRows(0, rows);
-            dataTable.insertRows(0, data);
+            dataTables[index].removeRows(0, rowsIndex);
+            dataTables[index].insertRows(0, data);
 
-            drawCharts(initializedCharts);
+            // for (var i = 0; i < data.length; i++) {                      
+            //  for (var j = 0; j < data[i].length; j++) {
+            //      dataTables[index].setValue(i, j, data[i][j]);
+            //      console.log( i + "," + j + "," + data[i][j] );
+            //  }
+            // }
+
+            drawCharts(readyCharts);
         },
 
         addChart: function( chart ) {
