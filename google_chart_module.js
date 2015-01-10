@@ -112,8 +112,18 @@ var google_chart_module = (function() {
             drawCharts(initializedCharts);
         },
 
-        updateChart: function(index, data) {
-            var options = charts[index].options;
+        updateChart: function(element, data) {
+            var options, index;
+
+            for (var chart in charts) {
+            	if (charts[chart].element === element) {
+            		options = charts[chart].options;
+            		index = chart;
+            	} else {
+            		console.error('No element found');
+            		return;
+            	}
+            }
 
             var dataTable = dataTables[index];
             var rows = dataTable.getNumberOfRows();
