@@ -119,10 +119,12 @@ var google_chart_module = (function() {
                 if (charts[chart].element === element) {
                     options = charts[chart].options;
                     index = chart;
-                } else {
-                    console.error('No element found');
-                    return;
                 }
+            }
+
+            if (!options) {
+                console.error('No element found');
+                return;
             }
 
             var dataTable = dataTables[index];
