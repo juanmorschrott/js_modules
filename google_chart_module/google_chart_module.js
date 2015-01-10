@@ -1,17 +1,10 @@
 var google_chart_module = (function() {
 
     google.load('visualization', '1', { packages: ['corechart'] });
-    // google.setOnLoadCallback(drawCharts);
 
     var charts = [];
-
-    function drawCharts() {
-        simpleChartsConfigCheck();
-
-        var dataTables = createDataTables();
-        setDataTablesRows(dataTables);
-
-    }
+    var dataTables = [];
+    var readyCharts = [];
 
     /**
     * Very basic check for passed configuration options
@@ -48,17 +41,27 @@ var google_chart_module = (function() {
 
         for (var chart in charts) {
             var data = new google.visualization.DataTable();
+            
+            dataTables.push( data );
+        }
+        return dataTables;
+    }
+
+    /**
+    * Set the data tables columns and fill them with the given data.
+    *
+    */
+    function setDataTablesColumns(dataTables) {
+        for (var chart in charts) {
 
             for (var columns in charts[chart].columns) {
                 var type = charts[chart].columns[columns].type;
                 var value = charts[chart].columns[columns].value;
 
-                data.addColumn( type, value );
+                dataTables[chart].addColumn( type, value );
 
             }
-            dataTables.push( data );
         }
-        return dataTables;
     }
 
     /**
@@ -67,21 +70,69 @@ var google_chart_module = (function() {
     */
     function setDataTablesRows(dataTables) {
         for (var i in dataTables) {
-            var e = document.getElementById(charts[i].element);
             var d = charts[i].data;
-            var o = charts[i].options;
 
             dataTables[i].addRows(d);
-            var chart = new google.visualization.LineChart(e);
-            chart.draw(dataTables[i], o);
 
         }
+    }
+
+    function initCharts(dataTables) {
+        var initializedCharts = [];
+
+        for (var i in dataTables) {
+            var e = document.getElementById(charts[i].element);
+
+            initializedCharts.push( new google.visualization.LineChart(e) );
+            
+        }
+        return initializedCharts;
+
+    }
+
+    function drawCharts(charts) {
+        for (var i in charts) {
+            var o = charts[i].options;
+            charts[i].draw(dataTables[i], o);
+        }
+
     }
 
     return {
 
         init: function() {
-            drawCharts();
+            simpleChartsConfigCheck();
+
+            dataTables = createDataTables();
+            setDataTablesColumns(dataTables);
+            setDataTablesRows(dataTables);
+
+            initializedCharts = initCharts(dataTables);
+
+            drawCharts(initializedCharts);
+        },
+
+        updateChart: function(element, data) {
+            var options, index;
+
+            for (var chart in charts) {
+                if (charts[chart].element === element) {
+                    options = charts[chart].options;
+                    index = chart;
+                } else {
+                    console.error('No element found');
+                    return;
+                }
+            }
+
+            var dataTable = dataTables[index];
+            var rows = dataTable.getNumberOfRows();
+            var columns = dataTable.getNumberOfColumns();
+
+            dataTable.removeRows(0, rows);
+            dataTable.insertRows(0, data);
+
+            drawCharts(initializedCharts);
         },
 
         addChart: function( chart ) {
