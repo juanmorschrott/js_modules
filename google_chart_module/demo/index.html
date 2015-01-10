@@ -17,18 +17,22 @@
 			google_chart_module.addChart({
 				'element': 'chart1',
 				'columns': [
-				{
-					type: 'number',
-					value: 'X'
-				},
-				{
-					type: 'number',
-					value: 'Dogs'
-				}
+					{
+						type: 'number',
+						value: 'X'
+					},
+					{
+						type: 'number',
+						value: 'Dogs'
+					}
 				],
 				'options': {
 					width: 500,
 					height: 100,
+					animation:{
+				        duration: 2000,
+				        easing: 'out',
+				    },
 					hAxis: {
 						title: 'Time'
 					},
@@ -37,29 +41,29 @@
 					}
 				},
 				'data': [
-				[0, 0],   [1, 10],  [2, 23],
-				[3, 17],  [4, 18],  [5, 9],
-				[6, 11],  [7, 27],  [8, 33],
-				[9, 40],  [10, 32], [11, 35],
-				[12, 30], [13, 40], [14, 42],
-				[15, 47], [16, 44], [17, 48],
-				[18, 52], [19, 54], [20, 42],
-				[21, 55], [22, 56], [23, 57],
-				[24, 60], [25, 50], [26, 52],
+					[0, 0],   [1, 10],  [2, 23],
+					[3, 17],  [4, 18],  [5, 9],
+					[6, 11],  [7, 27],  [8, 33],
+					[9, 40],  [10, 32], [11, 35],
+					[12, 30], [13, 40], [14, 42],
+					[15, 47], [16, 44], [17, 48],
+					[18, 52], [19, 54], [20, 42],
+					[21, 55], [22, 56], [23, 57],
+					[24, 60], [25, 50], [26, 52],
 				]
 			});
 
 			google_chart_module.addChart({
 				'element': 'chart2',
 				'columns': [
-				{
-					type: 'number',
-					value: 'X'
-				},
-				{
-					type: 'number',
-					value: 'Cats'
-				}
+					{
+						type: 'number',
+						value: 'X'
+					},
+					{
+						type: 'number',
+						value: 'Cats'
+					}
 				],
 				'options': {
 					width: 500,
@@ -72,12 +76,19 @@
 					}
 				},
 				'data': [
-				[0, 0],   [1, 10],  [2, 23],
-				[3, 17],  [4, 18],  [5, 9]
+					[0, 0],   [1, 10],  [2, 23],
+					[3, 17],  [4, 18],  [5, 9]
 				]
 			});
 
 			google_chart_module.init();
+
+			setTimeout(function() { 
+				google_chart_module.updateChart(0, [
+					[0, 0],   [1, 10],  [2, 23]
+				]);
+			}, 3000);
+
 			// --- end
 
 		});
@@ -88,14 +99,8 @@ var google_chart_module = (function() {
 		    // google.setOnLoadCallback(drawCharts);
 
 		    var charts = [];
-
-		    function drawCharts() {
-		    	simpleChartsConfigCheck();
-
-		    	var dataTables = createDataTables();
-		    	setDataTablesRows(dataTables);
-
-		    }
+		    var dataTables = [];
+		    var readyCharts = [];
 
 		    /**
 		    * Very basic check for passed configuration options
@@ -132,17 +137,27 @@ var google_chart_module = (function() {
 
 		    	for (var chart in charts) {
 		    		var data = new google.visualization.DataTable();
-
-		    		for (var columns in charts[chart].columns) {
-		    			var type = charts[chart].columns[columns].type;
-		    			var value = charts[chart].columns[columns].value;
-
-		    			data.addColumn( type, value );
-
-		    		}
+		    		
 		    		dataTables.push( data );
 		    	}
 		    	return dataTables;
+		    }
+
+			/**
+			* Set the data tables columns and fill them with the given data.
+			*
+			*/
+		    function setDataTablesColumns(dataTables) {
+		    	for (var chart in charts) {
+
+		    		for (var columns in charts[chart].columns) {
+			    		var type = charts[chart].columns[columns].type;
+			    		var value = charts[chart].columns[columns].value;
+
+			    		dataTables[chart].addColumn( type, value );
+
+			    	}
+		    	}
 		    }
 
 		    /**
@@ -151,21 +166,59 @@ var google_chart_module = (function() {
 		    */
 		    function setDataTablesRows(dataTables) {
 		    	for (var i in dataTables) {
-		    		var e = document.getElementById(charts[i].element);
 		    		var d = charts[i].data;
-		    		var o = charts[i].options;
 
 		    		dataTables[i].addRows(d);
-		    		var chart = new google.visualization.LineChart(e);
-		    		chart.draw(dataTables[i], o);
 
 		    	}
+		    }
+
+		    function initCharts(dataTables) {
+		    	var initializedCharts = [];
+
+		    	for (var i in dataTables) {
+		    		var e = document.getElementById(charts[i].element);
+
+		    		initializedCharts.push( new google.visualization.LineChart(e) );
+		    		
+		    	}
+		    	return initializedCharts;
+
+		    }
+
+		    function drawCharts(charts) {
+		    	for (var i in charts) {
+		    		var o = charts[i].options;
+					charts[i].draw(dataTables[i], o);
+		    	}
+
 		    }
 
 		    return {
 
 		    	init: function() {
-		    		drawCharts();
+			    	simpleChartsConfigCheck();
+
+			    	dataTables = createDataTables();
+			    	setDataTablesColumns(dataTables);
+			    	setDataTablesRows(dataTables);
+
+			    	initializedCharts = initCharts(dataTables);
+
+			    	drawCharts(initializedCharts);
+		    	},
+
+		    	updateChart: function(index, data) {
+		    		var options = charts[index].options;
+
+		    		var dataTable = dataTables[index];
+		    		var rows = dataTable.getNumberOfRows();
+		    		var columns = dataTable.getNumberOfColumns();
+
+		    		dataTable.removeRows(0, rows);
+		    		dataTable.insertRows(0, data);
+
+		    		drawCharts(initializedCharts);
 		    	},
 
 		    	addChart: function( chart ) {
