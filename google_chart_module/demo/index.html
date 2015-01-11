@@ -1,265 +1,265 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
-	<script src="jquery.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <title></title>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 </head>
 <body>
-	<div id="chart1"></div>
-	<div id="chart2"></div>
+    <div id="chart1"></div>
+    <div id="chart2"></div>
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-		$(document).ready(function() {
+        $(document).ready(function() {
 
-			// module use case example
-			google_chart_module.addChart({
-				'element': 'chart1',
-				'columns': [
-					{
-						type: 'number',
-						value: 'X'
-					},
-					{
-						type: 'number',
-						value: 'Dogs'
-					}
-				],
-				'options': {
-					width: 500,
-					height: 100,
-					animation:{
-				        duration: 500,
-				        easing: 'linear',
-				    },
-					hAxis: {
-						title: 'Time'
-					},
-					vAxis: {
-						title: 'Popularity'
-					}
-				},
-				'data': [
-					[0, 0],   [1, 10],  [2, 23],
-					[3, 17],  [4, 18],  [5, 9],
-					[6, 11],  [7, 27],  [8, 33],
-					[9, 40],  [10, 32], [11, 35],
-					[12, 30], [13, 40], [14, 42],
-					[15, 47], [16, 44], [17, 48],
-					[18, 52], [19, 54], [20, 42],
-					[21, 55], [22, 56], [23, 57],
-					[24, 60], [25, 50], [26, 52]
-				]
-			});
+            // module use case example
+            google_chart_module.addChart({
+                'element': 'chart1',
+                'columns': [
+                {
+                    type: 'number',
+                    value: 'X'
+                },
+                {
+                    type: 'number',
+                    value: 'Dogs'
+                }
+                ],
+                'options': {
+                    width: 500,
+                    height: 100,
+                    animation:{
+                        duration: 500,
+                        easing: 'linear',
+                    },
+                    hAxis: {
+                        title: 'Time'
+                    },
+                    vAxis: {
+                        title: 'Popularity'
+                    }
+                },
+                'data': [
+                    [0, 0],   [1, 10],  [2, 23],
+                    [3, 17],  [4, 18],  [5, 9],
+                    [6, 11],  [7, 27],  [8, 33],
+                    [9, 40],  [10, 32], [11, 35],
+                    [12, 30], [13, 40], [14, 42],
+                    [15, 47], [16, 44], [17, 48],
+                    [18, 52], [19, 54], [20, 42],
+                    [21, 55], [22, 56], [23, 57],
+                    [24, 60], [25, 50], [26, 52]
+                ]
+            });
 
-			google_chart_module.addChart({
-				'element': 'chart2',
-				'columns': [
-					{
-						type: 'number',
-						value: 'X'
-					},
-					{
-						type: 'number',
-						value: 'Cats'
-					}
-				],
-				
-				'data': [
-					[0, 0],   [1, 10],  [2, 23],
-					[3, 17],  [4, 18],  [5, 9]
-				]
-			});
+            google_chart_module.addChart({
+                'element': 'chart2',
+                'columns': [
+                    {
+                        type: 'number',
+                        value: 'X'
+                    },
+                    {
+                        type: 'number',
+                        value: 'Cats'
+                    }
+                ],
+                
+                'data': [
+                [0, 0],   [1, 10],  [2, 23],
+                [3, 17],  [4, 18],  [5, 9]
+                ]
+            });
 
-			google_chart_module.init();
+            google_chart_module.init();
 
-			setTimeout(function() { 
-				google_chart_module.updateChart('chart1', [
-					[0, 0],   [1, 10],  [2, 23],
-					[3, 45], [4, 86], [5, 1],
-					[6, 67], [7, 57], [8, 98],
-					[9, 54], [10, 1], [11, 48]
-				]);
-			}, 3000);
+            setTimeout(function() { 
+                google_chart_module.updateChart('chart1', [
+                    [0, 0],   [1, 10],  [2, 23],
+                    [3, 45], [4, 86], [5, 1],
+                    [6, 67], [7, 57], [8, 98],
+                    [9, 54], [10, 1], [11, 48]
+                    ]);
+            }, 3000);
 
-			// --- end
+            // --- end
 
-		});
+        });
 
-		var google_chart_module = (function() {
+        var google_chart_module = (function() {
 
-		    google.load('visualization', '1', { packages: ['corechart'] });
+            google.load('visualization', '1', { packages: ['corechart'] });
 
-		    var charts = [];
-		    var optionsArray = [];
-		    var dataTables = [];
-		    var readyCharts = [];
+            var charts = [];
+            var optionsArray = [];
+            var dataTables = [];
+            var readyCharts = [];
 
-		    var defaultOptions = {
-					width: 500,
-					height: 300,
-					animation:{
-				        duration: 500,
-				        easing: 'linear',
-				    },
-					hAxis: {
-						title: 'Time'
-					},
-					vAxis: {
-						title: 'Popularity'
-					}
-				};
+            var defaultOptions = {
+                width: 500,
+                height: 300,
+                animation:{
+                    duration: 500,
+                    easing: 'linear',
+                },
+                hAxis: {
+                    title: 'Time'
+                },
+                vAxis: {
+                    title: 'Popularity'
+                }
+            };
 
-		    /**
-		    * Very basic check for passed configuration options
-		    *
-		    */
-		    function simpleChartsConfigCheck() {
-		        for (var chart in charts) {
-		            assert(charts[chart].element);
-		            assert(charts[chart].columns);
-		            assert(charts[chart].options);
-		            assert(charts[chart].data);
-		        }
-		    }
+            /**
+            * Very basic check for passed configuration options
+            *
+            */
+            function simpleChartsConfigCheck() {
+                for (var chart in charts) {
+                    assert(charts[chart].element);
+                    assert(charts[chart].columns);
+                    assert(charts[chart].options);
+                    assert(charts[chart].data);
+                }
+            }
 
-		    function assert(condition, message) {
-		        if (!condition) {
-		            message = message || "Assertion failed";
-		            if (typeof Error !== "undefined") {
-		                throw new Error(message);
-		            }
-		            throw message; // Fallback
-		        }
-		    }
+            function assert(condition, message) {
+                if (!condition) {
+                    message = message || "Assertion failed";
+                    if (typeof Error !== "undefined") {
+                        throw new Error(message);
+                    }
+                    throw message; // Fallback
+                }
+            }
 
-		    /**
-		    * Creates an array containing the needed data tables and set it´s
-		    * columns
-		    *
-		    */
-		    function createDataTables() {
-		        simpleChartsConfigCheck();    // We check if the charts configs are OK
+            /**
+            * Creates an array containing the needed data tables and set it´s
+            * columns
+            *
+            */
+            function createDataTables() {
+                simpleChartsConfigCheck();    // We check if the charts configs are OK
 
-		        for (var chart in charts) {
-		            var data = new google.visualization.DataTable();
-		            
-		            dataTables.push( data );
-		        }
-		        return dataTables;
-		    }
+                for (var chart in charts) {
+                    var data = new google.visualization.DataTable();
+                    
+                    dataTables.push( data );
+                }
+                return dataTables;
+            }
 
-		    /**
-		    * Set the data tables columns and fill them with the given data.
-		    *
-		    */
-		    function setDataTablesColumns(dataTables) {
-		        for (var chart in charts) {
+            /**
+            * Set the data tables columns and fill them with the given data.
+            *
+            */
+            function setDataTablesColumns(dataTables) {
+                for (var chart in charts) {
 
-		            for (var columns in charts[chart].columns) {
-		                var type = charts[chart].columns[columns].type;
-		                var value = charts[chart].columns[columns].value;
+                    for (var columns in charts[chart].columns) {
+                        var type = charts[chart].columns[columns].type;
+                        var value = charts[chart].columns[columns].value;
 
-		                dataTables[chart].addColumn( type, value );
+                        dataTables[chart].addColumn( type, value );
 
-		            }
-		        }
-		    }
+                    }
+                }
+            }
 
-		    /**
-		    * Set the data tables rows and fill them with the given data.
-		    *
-		    */
-		    function setDataTablesRows(dataTables) {
-		        for (var i in dataTables) {
-		            var d = charts[i].data;
+            /**
+            * Set the data tables rows and fill them with the given data.
+            *
+            */
+            function setDataTablesRows(dataTables) {
+                for (var i in dataTables) {
+                    var d = charts[i].data;
 
-		            dataTables[i].addRows(d);
+                    dataTables[i].addRows(d);
 
-		        }
-		    }
+                }
+            }
 
-		    function initCharts(dataTables) {
-		        var initializedCharts = [];
+            function initCharts(dataTables) {
+                var initializedCharts = [];
 
-		        for (var i in dataTables) {
-		            var e = document.getElementById(charts[i].element);
+                for (var i in dataTables) {
+                    var e = document.getElementById(charts[i].element);
 
-		            initializedCharts.push( new google.visualization.LineChart(e) );
-		            
-		        }
-		        return initializedCharts;
+                    initializedCharts.push( new google.visualization.LineChart(e) );
+                    
+                }
+                return initializedCharts;
 
-		    }
+            }
 
-		    function drawCharts(charts) {
-		        for (var i in charts) {
-		            var o = optionsArray[i];
-		            charts[i].draw(dataTables[i], o);
-		        }
+            function drawCharts(charts) {
+                for (var i in charts) {
+                    var o = optionsArray[i];
+                    charts[i].draw(dataTables[i], o);
+                }
 
-		    }
+            }
 
-		    return {
+            return {
 
-		        init: function() {
-		            simpleChartsConfigCheck();
+                init: function() {
+                    simpleChartsConfigCheck();
 
-		            dataTables = createDataTables();
-		            setDataTablesColumns(dataTables);
-		            setDataTablesRows(dataTables);
+                    dataTables = createDataTables();
+                    setDataTablesColumns(dataTables);
+                    setDataTablesRows(dataTables);
 
-		            readyCharts = initCharts(dataTables);
+                    readyCharts = initCharts(dataTables);
 
-		            drawCharts(readyCharts);
-		        },
+                    drawCharts(readyCharts);
+                },
 
-		        updateChart: function(element, data, updateOptions) {
-		            var index;
+                updateChart: function(element, data, updateOptions) {
+                    var index;
 
-		            for (var chart in charts) {
-		            	if (charts[chart].element === element) {
-		            		index = chart;
-		            	}
-		            }
+                    for (var chart in charts) {
+                        if (charts[chart].element === element) {
+                            index = chart;
+                        }
+                    }
 
-		            if (!index) {
-		            	console.error('No element found');
-		            	return;
-		            }
-		            if(updateOptions){
-		            	optionsArray[index]=updateOptions;
-		            }
+                    if (!index) {
+                        console.error('No element found');
+                        return;
+                    }
+                    if(updateOptions){
+                        optionsArray[index]=updateOptions;
+                    }
 
-		            var rowsIndex = dataTables[index].getNumberOfRows();
+                    var rowsIndex = dataTables[index].getNumberOfRows();
 
-		             dataTables[index].removeRows(0, rowsIndex);
-		             dataTables[index].insertRows(0, data);
+                    dataTables[index].removeRows(0, rowsIndex);
+                    dataTables[index].insertRows(0, data);
 
-		            /*for (var i = 0; i < data.length; i++) {		            	
-		            	for (var j = 0; j < data[i].length; j++) {
-		            		dataTables[index].setValue(i, j, data[i][j]);
-		            		console.log( i + "," + j + "," + data[i][j] );
-		            	}
-		            }
-*/
+                    /*for (var i = 0; i < data.length; i++) {                        
+                        for (var j = 0; j < data[i].length; j++) {
+                            dataTables[index].setValue(i, j, data[i][j]);
+                            console.log( i + "," + j + "," + data[i][j] );
+                        }
+                    }
+                    */
 
-		            drawCharts(readyCharts);
-		        },
+                    drawCharts(readyCharts);
+                },
 
-		        addChart: function( chart ) {
-		            charts.push(chart);
-		            if(!chart.options ){
-		            	chart.options = defaultOptions;
-		            }
-		            optionsArray.push(chart.options);
-		        }
-		    };
+                addChart: function( chart ) {
+                    charts.push(chart);
+                    if(!chart.options ){
+                        chart.options = defaultOptions;
+                    }
+                    optionsArray.push(chart.options);
+                }
+            };
 
-		})();
+        })();
 
-	</script>
+    </script>
 
 </body>
 </html>
