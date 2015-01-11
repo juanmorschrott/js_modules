@@ -13,7 +13,6 @@
 
         $(document).ready(function() {
 
-            // module use case example
             google_chart_module.addChart({
                 'element': 'chart1',
                 'columns': [
@@ -76,13 +75,12 @@
 
             setTimeout(function() { 
                 google_chart_module.updateChart('chart1', [
-	                    [0, 0],   [1, 10],  [2, 23],
-	                    [3, 45], [4, 86], [5, 1],
-	                    [6, 67], [7, 57], [8, 98],
-	                    [9, 54], [10, 1], [11, 48]
-                    ]);
+	                [0, 0],   [1, 10],  [2, 23],
+	                [3, 45], [4, 86], [5, 1],
+	                [6, 67], [7, 57], [8, 98],
+	                [9, 54], [10, 1], [11, 48]
+                ]);
             }, 3000);
-            // --- end
 
         });
 
@@ -163,18 +161,22 @@
 
                 	charts[chart].dataTable.addRows(data);
                 }
-
             }
 
+            /**
+            * Sets the charts instances.
+            */
             function initCharts(dataTables) {
                 for (var chart in charts) {
                 	var element = document.getElementById(charts[chart].element);
 
                 	charts[chart].instance = new google.visualization.LineChart(element);
                 }
-
             }
 
+            /**
+            * Executes the draw function from all the charts.
+            */
             function drawCharts() {
                 for (var chart in charts) {
                 	var options = charts[chart].options;
@@ -182,7 +184,6 @@
 
                 	charts[chart].instance.draw(dataTable, options);
                 }
-
             }
 
             return {

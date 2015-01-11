@@ -75,18 +75,22 @@ var google_chart_module = (function() {
 
             charts[chart].dataTable.addRows(data);
         }
-
     }
 
+    /**
+    * Sets the charts instances.
+    */
     function initCharts(dataTables) {
         for (var chart in charts) {
             var element = document.getElementById(charts[chart].element);
 
             charts[chart].instance = new google.visualization.LineChart(element);
         }
-
     }
 
+    /**
+    * Executes the draw function from all the charts.
+    */
     function drawCharts() {
         for (var chart in charts) {
             var options = charts[chart].options;
@@ -94,7 +98,6 @@ var google_chart_module = (function() {
 
             charts[chart].instance.draw(dataTable, options);
         }
-
     }
 
     return {
