@@ -82,7 +82,6 @@
 	                    [9, 54], [10, 1], [11, 48]
                     ]);
             }, 3000);
-
             // --- end
 
         });
@@ -92,9 +91,6 @@
             google.load('visualization', '1', { packages: ['corechart'] });
 
             var charts = [];
-            var optionsArray = [];
-            var dataTables = [];
-            var readyCharts = [];
 
             var defaultOptions = {
                 width: 500,
@@ -140,9 +136,8 @@
                 for (var chart in charts) {
                     var data = new google.visualization.DataTable();
 
-                    dataTables.push( data );
+                    charts[chart].dataTable = data;
                 }
-                return dataTables;
             }
 
             /**
@@ -150,13 +145,11 @@
             */
             function setDataTablesColumns(dataTables) {
                 for (var chart in charts) {
-
                     for (var columns in charts[chart].columns) {
                         var type = charts[chart].columns[columns].type;
                         var value = charts[chart].columns[columns].value;
 
-                        dataTables[chart].addColumn( type, value );
-
+                        charts[chart].dataTable.addColumn( type, value );
                     }
                 }
             }
@@ -165,31 +158,29 @@
             * Set the data tables rows and fill them with the given data.
             */
             function setDataTablesRows(dataTables) {
-                for (var i in dataTables) {
-                    var d = charts[i].data;
+                for (var chart in charts) {
+                	var data = charts[chart].data;
 
-                    dataTables[i].addRows(d);
-
+                	charts[chart].dataTable.addRows(data);
                 }
+
             }
 
             function initCharts(dataTables) {
-                var initializedCharts = [];
+                for (var chart in charts) {
+                	var element = document.getElementById(charts[chart].element);
 
-                for (var i in dataTables) {
-                    var e = document.getElementById(charts[i].element);
-
-                    initializedCharts.push( new google.visualization.LineChart(e) );
-
+                	charts[chart].instance = new google.visualization.LineChart(element);
                 }
-                return initializedCharts;
 
             }
 
-            function drawCharts(charts) {
-                for (var i in charts) {
-                    var o = optionsArray[i];
-                    charts[i].draw(dataTables[i], o);
+            function drawCharts() {
+                for (var chart in charts) {
+                	var options = charts[chart].options;
+                	var dataTable = charts[chart].dataTable;
+
+                	charts[chart].instance.draw(dataTable, options);
                 }
 
             }
@@ -198,22 +189,22 @@
 
             	addChart: function( chart ) {
                     charts.push(chart);
-                    if(!chart.options ){
+                    if ( !chart.options ){
                         chart.options = defaultOptions;
                     }
-                    optionsArray.push(chart.options);
+
                 },
 
                 init: function() {
                     simpleChartsConfigCheck();
 
-                    dataTables = createDataTables();
-                    setDataTablesColumns(dataTables);
-                    setDataTablesRows(dataTables);
+                    createDataTables();
+                    setDataTablesColumns();
+                    setDataTablesRows();
 
-                    readyCharts = initCharts(dataTables);
+                    initCharts();
 
-                    drawCharts(readyCharts);
+                    drawCharts();
                 },
 
                 updateChart: function(element, data, updateOptions) {
@@ -231,15 +222,15 @@
                     }
 
                     if (updateOptions){
-                        optionsArray[index] = updateOptions;
+                        charts[index].options = updateOptions;
                     }
 
-                    var rowsIndex = dataTables[index].getNumberOfRows();
+                    var rowsIndex = charts[index].dataTable.getNumberOfRows();
 
-                    dataTables[index].removeRows(0, rowsIndex);
-                    dataTables[index].insertRows(0, data);
+                    charts[index].dataTable.removeRows(0, rowsIndex);
+                    charts[index].dataTable.insertRows(0, data);
 
-                    drawCharts(readyCharts);
+                    drawCharts();
                 }
                 
             };

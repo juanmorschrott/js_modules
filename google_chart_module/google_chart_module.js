@@ -3,12 +3,24 @@ var google_chart_module = (function() {
     google.load('visualization', '1', { packages: ['corechart'] });
 
     var charts = [];
-    var dataTables = [];
-    var readyCharts = [];
+
+    var defaultOptions = {
+        width: 500,
+        height: 300,
+        animation:{
+            duration: 500,
+            easing: 'linear',
+        },
+        hAxis: {
+            title: 'Time'
+        },
+        vAxis: {
+            title: 'Popularity'
+        }
+    };
 
     /**
     * Very basic check for passed configuration options
-    *
     */
     function simpleChartsConfigCheck() {
         for (var chart in charts) {
@@ -30,119 +42,109 @@ var google_chart_module = (function() {
     }
 
     /**
-    * Creates an array containing the needed data tables and set it´s
-    * columns
-    *
+    * Creates an array containing the needed data tables and set it´s columns
     */
     function createDataTables() {
-        simpleChartsConfigCheck();    // We check if the charts configs are OK
-
         for (var chart in charts) {
             var data = new google.visualization.DataTable();
-            
-            dataTables.push( data );
+
+            charts[chart].dataTable = data;
         }
-        return dataTables;
     }
 
     /**
     * Set the data tables columns and fill them with the given data.
-    *
     */
     function setDataTablesColumns(dataTables) {
         for (var chart in charts) {
-
             for (var columns in charts[chart].columns) {
                 var type = charts[chart].columns[columns].type;
                 var value = charts[chart].columns[columns].value;
 
-                dataTables[chart].addColumn( type, value );
-
+                charts[chart].dataTable.addColumn( type, value );
             }
         }
     }
 
     /**
     * Set the data tables rows and fill them with the given data.
-    *
     */
     function setDataTablesRows(dataTables) {
-        for (var i in dataTables) {
-            var d = charts[i].data;
+        for (var chart in charts) {
+            var data = charts[chart].data;
 
-            dataTables[i].addRows(d);
-
+            charts[chart].dataTable.addRows(data);
         }
+
     }
 
     function initCharts(dataTables) {
-        var initializedCharts = [];
+        for (var chart in charts) {
+            var element = document.getElementById(charts[chart].element);
 
-        for (var i in dataTables) {
-            var e = document.getElementById(charts[i].element);
-
-            initializedCharts.push( new google.visualization.LineChart(e) );
-            
+            charts[chart].instance = new google.visualization.LineChart(element);
         }
-        return initializedCharts;
 
     }
 
-    function drawCharts(charts) {
-        for (var i in charts) {
-            var o = charts[i].options;
-            charts[i].draw(dataTables[i], o);
+    function drawCharts() {
+        for (var chart in charts) {
+            var options = charts[chart].options;
+            var dataTable = charts[chart].dataTable;
+
+            charts[chart].instance.draw(dataTable, options);
         }
 
     }
 
     return {
 
+        addChart: function( chart ) {
+            charts.push(chart);
+            if ( !chart.options ){
+                chart.options = defaultOptions;
+            }
+
+        },
+
         init: function() {
             simpleChartsConfigCheck();
 
-            dataTables = createDataTables();
-            setDataTablesColumns(dataTables);
-            setDataTablesRows(dataTables);
+            createDataTables();
+            setDataTablesColumns();
+            setDataTablesRows();
 
-            readyCharts = initCharts(dataTables);
+            initCharts();
 
-            drawCharts(readyCharts);
+            drawCharts();
         },
 
-        updateChart: function(element, data) {
-            var options, index;
+        updateChart: function(element, data, updateOptions) {
+            var index;
 
             for (var chart in charts) {
                 if (charts[chart].element === element) {
-                    options = charts[chart].options;
                     index = chart;
                 }
             }
 
-            if (!options) {
+            if (!index) {
                 console.error('No element found');
                 return;
             }
 
-            var rowsIndex = dataTables[index].getNumberOfRows();
-
-            // dataTables[index].removeRows(0, rowsIndex);
-            // dataTables[index].insertRows(0, data);
-
-            for (var i = 0; i < data.length; i++) {                     
-                for (var j = 0; j < data[i].length; j++) {
-                    dataTables[index].setValue(i, j, data[i][j]);
-                    console.log( i + "," + j + "," + data[i][j] );
-                }
+            if (updateOptions){
+                charts[index].options = updateOptions;
             }
 
-            drawCharts(readyCharts);
-        },
+            var rowsIndex = charts[index].dataTable.getNumberOfRows();
 
-        addChart: function( chart ) {
-            charts.push(chart);
+            charts[index].dataTable.removeRows(0, rowsIndex);
+            charts[index].dataTable.insertRows(0, data);
+
+            drawCharts();
         }
+        
     };
 
 })();
