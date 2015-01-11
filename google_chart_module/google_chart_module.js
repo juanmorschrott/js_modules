@@ -34,10 +34,8 @@ var google_chart_module = (function() {
     * columns
     *
     */
-    function createDataTables(dataTables) {
+    function createDataTables() {
         simpleChartsConfigCheck();    // We check if the charts configs are OK
-
-        var dataTables = [];
 
         for (var chart in charts) {
             var data = new google.visualization.DataTable();
@@ -129,15 +127,15 @@ var google_chart_module = (function() {
 
             var rowsIndex = dataTables[index].getNumberOfRows();
 
-            dataTables[index].removeRows(0, rowsIndex);
-            dataTables[index].insertRows(0, data);
+            // dataTables[index].removeRows(0, rowsIndex);
+            // dataTables[index].insertRows(0, data);
 
-            // for (var i = 0; i < data.length; i++) {                      
-            //  for (var j = 0; j < data[i].length; j++) {
-            //      dataTables[index].setValue(i, j, data[i][j]);
-            //      console.log( i + "," + j + "," + data[i][j] );
-            //  }
-            // }
+            for (var i = 0; i < data.length; i++) {                     
+                for (var j = 0; j < data[i].length; j++) {
+                    dataTables[index].setValue(i, j, data[i][j]);
+                    console.log( i + "," + j + "," + data[i][j] );
+                }
+            }
 
             drawCharts(readyCharts);
         },
@@ -145,6 +143,6 @@ var google_chart_module = (function() {
         addChart: function( chart ) {
             charts.push(chart);
         }
-    }
+    };
 
 })();

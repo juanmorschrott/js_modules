@@ -31,7 +31,7 @@
 					height: 100,
 					animation:{
 				        duration: 2000,
-				        easing: 'linear',
+				        easing: 'linear'
 				    },
 					hAxis: {
 						title: 'Time'
@@ -49,7 +49,7 @@
 					[15, 47], [16, 44], [17, 48],
 					[18, 52], [19, 54], [20, 42],
 					[21, 55], [22, 56], [23, 57],
-					[24, 60], [25, 50], [26, 52],
+					[24, 60], [25, 50], [26, 52]
 				]
 			});
 
@@ -70,7 +70,7 @@
 					height: 100,
 					animation:{
 				        duration: 2000,
-				        easing: 'linear',
+				        easing: 'linear'
 				    },
 					hAxis: {
 						title: 'Time'
@@ -136,10 +136,8 @@
 		    * columns
 		    *
 		    */
-		    function createDataTables(dataTables) {
+		    function createDataTables() {
 		        simpleChartsConfigCheck();    // We check if the charts configs are OK
-
-		        var dataTables = [];
 
 		        for (var chart in charts) {
 		            var data = new google.visualization.DataTable();
@@ -231,15 +229,15 @@
 
 		            var rowsIndex = dataTables[index].getNumberOfRows();
 
-		            dataTables[index].removeRows(0, rowsIndex);
-		            dataTables[index].insertRows(0, data);
+		            // dataTables[index].removeRows(0, rowsIndex);
+		            // dataTables[index].insertRows(0, data);
 
-		            // for (var i = 0; i < data.length; i++) {		            	
-		            // 	for (var j = 0; j < data[i].length; j++) {
-		            // 		dataTables[index].setValue(i, j, data[i][j]);
-		            // 		console.log( i + "," + j + "," + data[i][j] );
-		            // 	}
-		            // }
+		            for (var i = 0; i < data.length; i++) {		            	
+		            	for (var j = 0; j < data[i].length; j++) {
+		            		dataTables[index].setValue(i, j, data[i][j]);
+		            		console.log( i + "," + j + "," + data[i][j] );
+		            	}
+		            }
 
 		            drawCharts(readyCharts);
 		        },
@@ -247,7 +245,7 @@
 		        addChart: function( chart ) {
 		            charts.push(chart);
 		        }
-		    }
+		    };
 
 		})();
 
