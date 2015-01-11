@@ -103,11 +103,10 @@ var google_chart_module = (function() {
     return {
 
         addChart: function( chart ) {
-            charts.push(chart);
-            if ( !chart.options ){
+            if ( !chart.options ) {
                 chart.options = defaultOptions;
             }
-
+            charts.push(chart);
         },
 
         init: function() {
