@@ -30,8 +30,8 @@
 					width: 500,
 					height: 100,
 					animation:{
-				        duration: 2000,
-				        easing: 'linear'
+				        duration: 500,
+				        easing: 'linear',
 				    },
 					hAxis: {
 						title: 'Time'
@@ -65,20 +65,7 @@
 						value: 'Cats'
 					}
 				],
-				'options': {
-					width: 500,
-					height: 100,
-					animation:{
-				        duration: 2000,
-				        easing: 'linear'
-				    },
-					hAxis: {
-						title: 'Time'
-					},
-					vAxis: {
-						title: 'Popularity'
-					}
-				},
+				
 				'data': [
 					[0, 0],   [1, 10],  [2, 23],
 					[3, 17],  [4, 18],  [5, 9]
@@ -105,8 +92,24 @@
 		    google.load('visualization', '1', { packages: ['corechart'] });
 
 		    var charts = [];
+		    var optionsArray = [];
 		    var dataTables = [];
 		    var readyCharts = [];
+
+		    var defaultOptions = {
+					width: 500,
+					height: 300,
+					animation:{
+				        duration: 500,
+				        easing: 'linear',
+				    },
+					hAxis: {
+						title: 'Time'
+					},
+					vAxis: {
+						title: 'Popularity'
+					}
+				};
 
 		    /**
 		    * Very basic check for passed configuration options
@@ -192,7 +195,7 @@
 
 		    function drawCharts(charts) {
 		        for (var i in charts) {
-		            var o = charts[i].options;
+		            var o = optionsArray[i];
 		            charts[i].draw(dataTables[i], o);
 		        }
 
@@ -212,38 +215,45 @@
 		            drawCharts(readyCharts);
 		        },
 
-		        updateChart: function(element, data) {
-		            var options, index;
+		        updateChart: function(element, data, updateOptions) {
+		            var index;
 
 		            for (var chart in charts) {
 		            	if (charts[chart].element === element) {
-		            		options = charts[chart].options;
 		            		index = chart;
 		            	}
 		            }
 
-		            if (!options) {
+		            if (!index) {
 		            	console.error('No element found');
 		            	return;
+		            }
+		            if(updateOptions){
+		            	optionsArray[index]=updateOptions;
 		            }
 
 		            var rowsIndex = dataTables[index].getNumberOfRows();
 
-		            // dataTables[index].removeRows(0, rowsIndex);
-		            // dataTables[index].insertRows(0, data);
+		             dataTables[index].removeRows(0, rowsIndex);
+		             dataTables[index].insertRows(0, data);
 
-		            for (var i = 0; i < data.length; i++) {		            	
+		            /*for (var i = 0; i < data.length; i++) {		            	
 		            	for (var j = 0; j < data[i].length; j++) {
 		            		dataTables[index].setValue(i, j, data[i][j]);
 		            		console.log( i + "," + j + "," + data[i][j] );
 		            	}
 		            }
+*/
 
 		            drawCharts(readyCharts);
 		        },
 
 		        addChart: function( chart ) {
 		            charts.push(chart);
+		            if(!chart.options ){
+		            	chart.options = defaultOptions;
+		            }
+		            optionsArray.push(chart.options);
 		        }
 		    };
 
