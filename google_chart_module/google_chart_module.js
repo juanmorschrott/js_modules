@@ -6,10 +6,10 @@ var google_chart_module = (function() {
 
     var defaultOptions = {
         width: 500,
-        height: 300,
+        height: 500,
         animation:{
             duration: 500,
-            easing: 'linear',
+            easing: 'linear'
         },
         hAxis: {
             title: 'Time'
@@ -100,12 +100,30 @@ var google_chart_module = (function() {
         }
     }
 
+    function extend(out) {
+        out = out || {};
+
+        for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i])
+                continue;
+
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key))
+                    out[key] = arguments[i][key];
+                }
+        }
+
+        return out;
+    };
+
     return {
 
         addChart: function( chart ) {
             if ( !chart.options ) {
                 chart.options = defaultOptions;
-            }
+            } else {
+                chart.options = extend({}, defaultOptions, chart.options);
+            }                   
             charts.push(chart);
         },
 
