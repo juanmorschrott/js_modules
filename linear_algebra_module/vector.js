@@ -11,7 +11,7 @@ class Vector {
   }
 
   /*
-  * Vectos substraction
+  * Vectos addition
   */
   add(vector) {
     if (this.coordinates.length !== vector.coordinates.length) {
