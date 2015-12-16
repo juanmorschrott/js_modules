@@ -17,9 +17,9 @@ class Vector {
     if (this.coordinates.length !== vector.coordinates.length) {
       throw new Error("Vectors should have same length");
     }
-    var result = [];
+    let result = [];
 
-    for (var i = 0; i < this.coordinates.length; i++) {
+    for (let i = 0; i < this.coordinates.length; i++) {
       result.push(this.coordinates[i] + vector.coordinates[i]);
     }
 
@@ -33,9 +33,9 @@ class Vector {
     if (this.coordinates.length !== vector.coordinates.length) {
       throw new Error("Vectors should have same length");
     }
-    var result = [];
+    let result = [];
 
-    for (var i = 0; i < this.coordinates.length; i++) {
+    for (let i = 0; i < this.coordinates.length; i++) {
       result.push(this.coordinates[i] - vector.coordinates[i]);
     }
     return new Vector(result);
@@ -48,9 +48,9 @@ class Vector {
     if (this.coordinates.length !== vector.coordinates.length) {
       throw new Error("Vectors should have same length");
     }
-    var result = [];
+    let result = [];
 
-    for (var i = 0; i < this.coordinates.length; i++) {
+    for (let i = 0; i < this.coordinates.length; i++) {
       result.push(this.coordinates[i] * vector.coordinates[i]);
     }
 
