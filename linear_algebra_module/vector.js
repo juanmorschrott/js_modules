@@ -7,7 +7,7 @@ class Vector {
 
   constructor(coordinates) {
     this.coordinates = coordinates;
-    this.dimension = coordinates.length;
+    this.dimension = this.coordinates.length;
   }
 
   /*
@@ -44,24 +44,44 @@ class Vector {
   /*
   * Vector scalar multiplication
   */
-  multiply() {
-    if (this.coordinates.length !== vector.coordinates.length) {
-      throw new Error("Vectors should have same length");
+  scalarMultiply(weight) {
+    if (!weight || typeof weight !== 'number') {
+      throw new Error("Not valid weight given");
     }
     let result = [];
 
     for (let i = 0; i < this.coordinates.length; i++) {
-      result.push(this.coordinates[i] * vector.coordinates[i]);
+      result.push(this.coordinates[i] * weight);
     }
 
     return new Vector(result);
+  }
+
+  magnitude() {
+    let coordinatesSquared = [];
+    this.coordinates.forEach( (coordinate) =>  {
+      coordinatesSquared.push( Math.pow(coordinate, 2) )
+    });
+
+    return Math.sqrt( coordinatesSquared.reduce( (previousValue, currentValue) => previousValue + currentValue) );
+  }
+
+  normalized() {
+    let magnitude;
+
+    try {
+      magnitude = this.magnitude();
+      return this.scalarMultiply( parseInt(1.0) / parseInt(magnitude) );
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   /**
   * Vector string representation
   */
   toString() {
-    return "Vector: " + coordinates;
+    return "Vector: [" + this.coordinates + "]";
   }
 
   /**
@@ -88,5 +108,6 @@ let my_vector3 = new Vector([-1,2,3]);
 
 console.log(my_vector.isEqual(my_vector2));
 console.log(my_vector.isEqual(my_vector3));
-
 console.log(my_vector.substract(my_vector3));
+console.log(my_vector.magnitude());
+console.log(my_vector.scalarMultiply(2));
