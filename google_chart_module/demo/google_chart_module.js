@@ -100,23 +100,6 @@ var google_chart_module = (function() {
         }
     }
 
-    // Public API
-
-    /*
-    * Initializes module
-    */
-    function init() {
-        simpleChartsConfigCheck();
-        createDataTables();
-        setDataTablesColumns();
-        setDataTablesRows();
-        initCharts();
-        drawCharts();
-    }
-
-    /*
-    * Adds new Chart
-    */
     function addChart( chart ) {
         if ( !chart.options ) {
             chart.options = defaultOptions;
@@ -126,9 +109,15 @@ var google_chart_module = (function() {
         charts.push(chart);
     }
 
-    /*
-    * Updates Chart
-    */
+    function init() {
+        simpleChartsConfigCheck();
+        createDataTables();
+        setDataTablesColumns();
+        setDataTablesRows();
+        initCharts();
+        drawCharts();
+    }
+
     function updateChart(element, data, updateOptions) {
         var index;
 
@@ -155,9 +144,8 @@ var google_chart_module = (function() {
         drawCharts();
     }
 
-    // Utils
-
     /*
+    * Utils
     * Extend function
     */
     function extend(out) {
